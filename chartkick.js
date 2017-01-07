@@ -1441,14 +1441,18 @@
     return key;
   };
 
-  var formatSeriesData = function (data, keyType) {
-    var r = [], key, j;
+  var formatSeriesData = function (data, keyType, round) {
+    var r = [], key, j, v;
     for (j = 0; j < data.length; j++) {
       if (keyType === "bubble") {
         r.push([toFloat(data[j][0]), toFloat(data[j][1]), toFloat(data[j][2])]);
       } else {
         key = toFormattedKey(data[j][0], keyType);
-        r.push([key, toFloat(data[j][1])]);
+        v = toFloat(data[j][1]);
+        if (round) {
+          v = roundTo(v, round);
+        }
+        r.push([key, v]);
       }
     }
     if (keyType === "datetime") {
@@ -1456,6 +1460,14 @@
     }
     return r;
   };
+
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round#Decimal_rounding
+  function roundTo(number, precision) {
+    var factor = Math.pow(10, precision);
+    var tempNumber = number * factor;
+    var roundedTempNumber = Math.round(tempNumber);
+    return roundedTempNumber / factor;
+  }
 
   function isMinute(d) {
     return d.getMilliseconds() === 0 && d.getSeconds() === 0;
@@ -1535,7 +1547,7 @@
 
     // right format
     for (i = 0; i < series.length; i++) {
-      series[i].data = formatSeriesData(toArr(series[i].data), keyType);
+      series[i].data = formatSeriesData(toArr(series[i].data), keyType, opts.round);
     }
 
     return series;
