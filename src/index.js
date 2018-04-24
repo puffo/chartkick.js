@@ -6,9 +6,44 @@ import { merge, isFunction, isArray, toStr, toFloat, toDate, toArr, sortByTime, 
 import { pushRequest } from "./request-queue";
 
 let config = (typeof window !== "undefined" && window.Chartkick) || {};
+let pushedCharts = [];
 let adapters = [];
+let pageLoaded = false;
+let loadCallbacks = [];
+
+if (isArray(config)) {
+  pushedCharts = config;
+  config = {};
+}
+
+function loadComplete() {
+  pageLoaded = true;
+  executeLoadCallbacks();
+}
+
+function executeLoadCallbacks() {
+  let callback;
+  while ((callback = loadCallbacks.shift())) {
+    callback();
+  }
+}
+
+if (window.addEventListener) {
+  window.addEventListener("load", loadComplete, true);
+} else if (window.attachEvent) {
+  window.attachEvent("onload", loadComplete);
+} else {
+  loadComplete();
+}
 
 // helpers
+
+function onLoad(callback) {
+  loadCallbacks.push(callback);
+  if (pageLoaded) {
+    executeLoadCallbacks();
+  }
+}
 
 function setText(element, text) {
   if (document.body.innerText) {
@@ -169,7 +204,7 @@ function renderChart(chartType, chart) {
 
 // TODO remove chartType if cross-browser way
 // to get the name of the chart class
-function callAdapter(chartType, chart) {
+function callAdapter(chartType, chart, secondTry) {
   let i, adapter, fnName, adapterName;
   fnName = "render" + chartType;
   adapterName = chart.options.adapter;
@@ -184,10 +219,16 @@ function callAdapter(chartType, chart) {
     }
   }
 
-  if (adapters.length > 0) {
-    throw new Error("No charting library found for " + chartType);
+  if (secondTry) {
+    if (adapters.length > 0) {
+      throw new Error("No charting library found for " + chartType);
+    } else {
+      throw new Error("No charting libraries found - be sure to include one before your charts");
+    }
   } else {
-    throw new Error("No charting libraries found - be sure to include one before your charts");
+    onLoad( function () {
+      callAdapter(chartType, chart, true);
+    });
   }
 }
 
@@ -539,7 +580,14 @@ const Chartkick = {
   config: config,
   options: {},
   adapters: adapters,
-  addAdapter: addAdapter
+  addAdapter: addAdapter,
+  push: function (args) {
+    new Chartkick[args[0]](args[1], args[2], args[3]);
+  }
 };
+
+for (let i = 0; i < pushedCharts.length; i++) {
+  Chartkick.push(pushedCharts[i]);
+}
 
 export default Chartkick;
