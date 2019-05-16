@@ -22,7 +22,7 @@ And add
 import Chartkick from "chartkick"
 import Chart from "chart.js"
 
-Chartkick.addAdapter(Chart)
+Chartkick.use(Chart)
 ```
 
 This sets up Chartkick with Chart.js. For other charting libraries, see [detailed instructions](#installation).
@@ -331,7 +331,7 @@ And add
 import Chartkick from "chartkick"
 import Chart from "chart.js"
 
-Chartkick.addAdapter(Chart)
+Chartkick.use(Chart)
 ```
 
 ### Google Charts
@@ -368,7 +368,7 @@ And add
 import Chartkick from "chartkick"
 import Highcharts from "highcharts"
 
-Chartkick.addAdapter(Highcharts)
+Chartkick.use(Highcharts)
 ```
 
 ### No Package Manager
