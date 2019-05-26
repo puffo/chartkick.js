@@ -354,6 +354,14 @@ And include on the page
 <script src="https://www.gstatic.com/charts/loader.js"></script>
 ```
 
+To specify a language or Google Maps API key, use:
+
+```js
+Chartkick.configure({language: "de", mapsApiKey: "..."})
+```
+
+before your charts.
+
 ### Highcharts
 
 Run
@@ -395,16 +403,6 @@ For Highcharts (works with 2.1+), [download it](https://www.highcharts.com/downl
 <script src="/path/to/highcharts.js"></script>
 <script src="chartkick.js"></script>
 ```
-
-### Localization
-
-To specify a language for Google Charts, add:
-
-```javascript
-Chartkick.configure({language: "de"})
-```
-
-after the JavaScript files and before your charts.
 
 ### Multiple Libraries
 
