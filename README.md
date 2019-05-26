@@ -18,7 +18,7 @@ yarn add chartkick chart.js
 
 And add
 
-```es6
+```javascript
 import Chartkick from "chartkick"
 import Chart from "chart.js"
 
@@ -327,7 +327,7 @@ yarn add chartkick chart.js
 
 And add
 
-```es6
+```javascript
 import Chartkick from "chartkick"
 import Chart from "chart.js"
 
@@ -344,7 +344,7 @@ yarn add chartkick
 
 And add
 
-```es6
+```javascript
 import Chartkick from "chartkick"
 ```
 
@@ -372,7 +372,7 @@ yarn add chartkick highcharts
 
 And add
 
-```es6
+```javascript
 import Chartkick from "chartkick"
 import Highcharts from "highcharts"
 
